@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Área entre curvas · Cálculo II</title>
+  <meta name="description" content="Guía interactiva de Cálculo II sobre el área entre curvas: teoría completa, ejemplos con funciones compuestas y racionales, graficador y ejercicios.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+  <script defer src="math.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#inicio">∫ Área entre curvas</a>
+  <nav aria-label="Secciones">
+    <a href="#teoria">Teoría</a>
+    <a href="#procedimiento">Método</a>
+    <a href="#casos">Casos</a>
+    <a href="#ejemplos">Ejemplos</a>
+    <a href="#laboratorio">Laboratorio</a>
+    <a href="#ejercicios">Ejercicios</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <p class="eyebrow">Cálculo II · Aplicaciones de la integral</p>
+  <h1>Área entre curvas</h1>
+  <p class="lead">De las sumas de Riemann a la integral definida: cómo calcular el área de una región encerrada por dos o más gráficas, integrando respecto a $x$ o a $y$, con curvas que se cruzan y con funciones polinómicas, compuestas, racionales y trigonométricas.</p>
+  <ul class="chips">
+    <li>Teoría completa</li><li>9 ejemplos resueltos</li><li>Funciones compuestas y racionales</li><li>Graficador interactivo</li><li>7 ejercicios con solución</li>
+  </ul>
+</section>
+
+<!-- ===================== TEORIA ===================== -->
+<section id="teoria">
+  <h2><span class="num">1</span> La idea: de rectángulos a una integral</h2>
+  <p>Sean $f$ y $g$ funciones continuas en $[a,b]$ con $f(x)\ge g(x)$. Queremos el área de la región entre sus gráficas, entre las rectas $x=a$ y $x=b$.</p>
+  <p>Dividimos $[a,b]$ en $n$ subintervalos de ancho $\Delta x=\frac{b-a}{n}$. Sobre cada uno levantamos un rectángulo cuya altura es la <em>distancia vertical</em> entre las curvas, $f(x_i^*)-g(x_i^*)$:</p>
+  $$A\approx\sum_{i=1}^{n}\bigl[f(x_i^*)-g(x_i^*)\bigr]\,\Delta x \quad\xrightarrow{\;n\to\infty\;}\quad \int_a^b\bigl[f(x)-g(x)\bigr]\,dx .$$
+
+  <div class="widget" id="riemann">
+    <h3>Explora: rectángulos que aproximan el área</h3>
+    <p class="muted">Región entre $f(x)=x+2$ y $g(x)=x^2$ en $[-1,2]$. Aumenta $n$ y observa cómo la suma se acerca al área exacta.</p>
+    <div class="controls">
+      <label>Rectángulos $n$: <output id="rn-out">4</output>
+        <input type="range" id="rn" min="1" max="60" value="4"></label>
+      <label>Altura en el
+        <select id="rm"><option value="0">extremo izquierdo</option><option value="0.5" selected>punto medio</option><option value="1">extremo derecho</option></select>
+      </label>
+    </div>
+    <div id="riemann-plot" class="plotbox"></div>
+    <p class="readout" id="riemann-read"></p>
+  </div>
+
+  <h3>Las fórmulas fundamentales</h3>
+  <div class="formulas">
+    <div class="card">
+      <h4>Respecto a $x$ (franjas verticales)</h4>
+      $$A=\int_a^b\bigl[f_{\text{sup}}(x)-f_{\text{inf}}(x)\bigr]\,dx$$
+      <p>Curvas de la forma $y=f(x)$. Restas <b>superior − inferior</b>.</p>
+    </div>
+    <div class="card">
+      <h4>Respecto a $y$ (franjas horizontales)</h4>
+      $$A=\int_c^d\bigl[x_{\text{der}}(y)-x_{\text{izq}}(y)\bigr]\,dy$$
+      <p>Curvas de la forma $x=h(y)$. Restas <b>derecha − izquierda</b>.</p>
+    </div>
+    <div class="card">
+      <h4>Si las curvas se cruzan</h4>
+      $$A=\int_a^b\bigl|f(x)-g(x)\bigr|\,dx$$
+      <p>Se parte en los puntos de intersección y en cada tramo se restan en el orden correcto.</p>
+    </div>
+    <div class="card">
+      <h4>Caso particular: $g(x)=0$</h4>
+      $$A=\int_a^b|f(x)|\,dx$$
+      <p>Área entre la curva y el eje $x$. Si $f$ cambia de signo, <b>no</b> basta $\int f$: hay que dividir.</p>
+    </div>
+  </div>
+  <p class="note"><b>Por qué “superior − inferior”.</b> La altura de cada franja es una distancia, y una distancia es positiva. Si restaras al revés obtendrías el área con signo negativo. Esa es la razón de ubicar siempre cuál curva está arriba (o a la derecha).</p>
+</section>
+
+<!-- ===================== PROCEDIMIENTO ===================== -->
+<section id="procedimiento">
+  <h2><span class="num">2</span> Método paso a paso</h2>
+  <ol class="steps big">
+    <li><b>Grafica</b> las curvas (aunque sea un bosquejo) y sombrea la región pedida.</li>
+    <li><b>Halla las intersecciones</b> resolviendo $f(x)=g(x)$ (o $x_1(y)=x_2(y)$). Estos puntos suelen ser los límites de integración. Revisa si se cruzan más veces dentro del intervalo.</li>
+    <li><b>Elige la variable</b> de integración (ver tabla). Con $x$, las franjas son verticales; con $y$, horizontales.</li>
+    <li><b>Identifica qué curva está arriba</b> (o a la derecha) en cada tramo: evalúa ambas funciones en un punto de prueba dentro del tramo.</li>
+    <li><b>Plantea</b> la integral (o la suma de integrales) con integrando “superior − inferior”.</li>
+    <li><b>Integra</b> con una antiderivada. Si el integrando es una función compuesta, usa sustitución.</li>
+    <li><b>Verifica</b>: el área debe ser positiva; derivando tu antiderivada debes recuperar el integrando; compara con una estimación gráfica.</li>
+  </ol>
+
+  <h3>¿Integrar en $x$ o en $y$?</h3>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Situación</th><th>Conviene</th></tr></thead>
+    <tbody>
+      <tr><td>Las curvas se dan como $y=f(x)$ y una de ellas siempre queda arriba</td><td>$dx$</td></tr>
+      <tr><td>Las curvas se dan como $x=h(y)$ (por ejemplo $x=y^2$)</td><td>$dy$</td></tr>
+      <tr><td>Con $dx$ la frontera superior o inferior cambia de fórmula (hay que partir la región)</td><td>probar $dy$: suele dar una sola integral</td></tr>
+      <tr><td>Con $dy$ habría que despejar $x$ y salen raíces o dos ramas</td><td>$dx$</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="muted">Ambas variables dan siempre el mismo valor; solo cambia el trabajo. El Ejemplo 2 resuelve la misma región de las dos formas.</p>
+</section>
+
+<!-- ===================== CASOS ===================== -->
+<section id="casos">
+  <h2><span class="num">3</span> Todos los casos que debes dominar</h2>
+  <div class="cases">
+    <div class="card"><span class="badge">Caso 1</span><h4>Una curva siempre arriba</h4>
+      <p>$f\ge g$ en todo $[a,b]$. Una sola integral: $\int_a^b (f-g)\,dx$. <em>Ejemplos 1, 4, 5, 6, 7 y 9.</em></p></div>
+    <div class="card"><span class="badge">Caso 2</span><h4>Las curvas se cruzan</h4>
+      <p>Se parte el intervalo en cada cruce y se suma el área de cada tramo. Un solo $\int (f-g)$ <b>cancela áreas</b> y da un resultado incorrecto. <em>Ejemplos 3 y 8.</em></p></div>
+    <div class="card"><span class="badge">Caso 3</span><h4>La frontera cambia de fórmula</h4>
+      <p>La región está limitada arriba (o abajo) por curvas distintas en distintos tramos; se corta donde cambia la frontera. <em>Ejemplo 2 (en $x$).</em></p></div>
+    <div class="card"><span class="badge">Caso 4</span><h4>Integración respecto a $y$</h4>
+      <p>Se despeja $x$ en cada curva y se integra “derecha − izquierda” entre las ordenadas de intersección. <em>Ejemplo 2.</em></p></div>
+    <div class="card"><span class="badge">Caso 5</span><h4>Funciones compuestas</h4>
+      <p>Aparecen $e^{x^2}$, $\sqrt{x^2+1}$, $\sin(2x)$, etc. La antiderivada requiere sustitución. <em>Ejemplos 4 y 9.</em></p></div>
+    <div class="card"><span class="badge">Caso 6</span><h4>Funciones racionales</h4>
+      <p>Cocientes como $\frac1x$, $\frac{2x}{x^2+1}$, $\frac1{x^2+1}$. Sus integrales dan $\ln$ y $\arctan$. Cuidado con las <b>asíntotas verticales</b>: si el intervalo contiene una, la integral es impropia. <em>Ejemplos 5, 6 y 7.</em></p></div>
+    <div class="card"><span class="badge">Caso 7</span><h4>Región con el eje $x$ u otra recta</h4>
+      <p>Es $g(x)=0$ (o $g(x)=k$). Si $f$ cruza esa recta, se divide en tramos y se usa el valor absoluto. <em>Ejercicio 7.</em></p></div>
+    <div class="card"><span class="badge">Caso 8</span><h4>Límites dados por rectas verticales</h4>
+      <p>Si el enunciado dice “entre $x=a$ y $x=b$”, esos son los límites, aunque las curvas se corten en otros puntos. Aun así hay que revisar los cruces <em>dentro</em> de $[a,b]$.</p></div>
+  </div>
+</section>
+
+<!-- ===================== EJEMPLOS ===================== -->
+<section id="ejemplos">
+  <h2><span class="num">4</span> Ejemplos resueltos</h2>
+  <p class="muted">Cada gráfica se dibuja y se integra numéricamente en tu navegador; el valor numérico que ves debe coincidir con el resultado exacto del desarrollo.</p>
+
+  <!-- E1 -->
+  <article class="ex">
+    <h3>Ejemplo 1 <span class="tag">Polinómicas · una curva arriba</span></h3>
+    <p>Calcula el área entre $y=x+2$ y $y=x^2$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"x+2","g":"x^2","a":-1,"b":2,"var":"x"},"xr":[-2,3],"yr":[-1,5],"curves":[{"f":"x+2","label":"y=x+2"},{"f":"x^2","label":"y=x^2"}],"val":4.5}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Intersecciones:</b> $x^2=x+2\Rightarrow x^2-x-2=0\Rightarrow (x-2)(x+1)=0$, así $x=-1$ y $x=2$.</li>
+          <li><b>Quién está arriba:</b> en $x=0$, $x+2=2>0=x^2$, luego $x+2$ es la superior.</li>
+          <li><b>Integral:</b>
+            $$A=\int_{-1}^{2}\bigl(x+2-x^2\bigr)dx=\Bigl[\tfrac{x^2}{2}+2x-\tfrac{x^3}{3}\Bigr]_{-1}^{2}=\Bigl(\tfrac{10}{3}\Bigr)-\Bigl(-\tfrac76\Bigr)=\tfrac92 .$$</li>
+        </ol>
+        <p class="answer">$A=\dfrac92=4.5$ u²</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E2 -->
+  <article class="ex">
+    <h3>Ejemplo 2 <span class="tag">Respecto a $y$ · frontera que cambia</span></h3>
+    <p>Calcula el área de la región encerrada por $x=y^2$ y $y=x-2$. Resuélvela integrando respecto a $y$ y después respecto a $x$ para comparar.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"y+2","g":"y^2","a":-1,"b":2,"var":"y"},"xr":[-1,5],"yr":[-2,3],"curves":[{"f":"y^2","var":"y","label":"x=y^2"},{"f":"y+2","var":"y","label":"x=y+2 (es decir, y=x−2)"}],"val":4.5}'></figure>
+      <div class="sol">
+        <p><b>Con $dy$ (una sola integral).</b> Despejamos $x$: $x=y^2$ y $x=y+2$.</p>
+        <ol>
+          <li><b>Intersecciones:</b> $y^2=y+2\Rightarrow y=-1$ o $y=2$.</li>
+          <li><b>Derecha:</b> en $y=0$, $y+2=2>0=y^2$, la recta está a la derecha.</li>
+          <li>$$A=\int_{-1}^{2}\bigl(y+2-y^2\bigr)dy=\Bigl[\tfrac{y^2}{2}+2y-\tfrac{y^3}{3}\Bigr]_{-1}^{2}=\tfrac92 .$$</li>
+        </ol>
+        <p class="answer">$A=\dfrac92$ u²</p>
+      </div>
+    </div>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"regions":[{"upper":"sqrt(x)","lower":"-sqrt(x)","a":0,"b":1,"var":"x"},{"upper":"sqrt(x)","lower":"x-2","a":1,"b":4,"var":"x"}],"xr":[-1,5],"yr":[-2,3],"curves":[{"f":"sqrt(x)","label":"y=√x"},{"f":"-sqrt(x)","label":"y=−√x"},{"f":"x-2","label":"y=x−2"}],"val":4.5}'></figure>
+      <div class="sol">
+        <p><b>Con $dx$ (dos integrales).</b> Para $0\le x\le1$ la región va de $y=-\sqrt x$ a $y=\sqrt x$; para $1\le x\le4$ va de $y=x-2$ a $y=\sqrt x$ (la frontera inferior cambia de fórmula en $x=1$).</p>
+        $$A=\int_0^1\bigl(\sqrt x+\sqrt x\bigr)dx+\int_1^4\bigl(\sqrt x-(x-2)\bigr)dx=\tfrac43+\tfrac{19}{6}=\tfrac{27}{6}=\tfrac92 .$$
+        <p>Mismo resultado, pero con $dy$ fue mucho más corto: <b>elegir bien la variable ahorra trabajo</b>.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E3 -->
+  <article class="ex">
+    <h3>Ejemplo 3 <span class="tag">Trigonométricas · las curvas se cruzan</span></h3>
+    <p>Calcula el área entre $y=\sin x$ y $y=\cos x$ en $[0,\pi]$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"cos(x)","g":"sin(x)","a":0,"b":"pi","var":"x"},"xr":[-0.3,3.5],"yr":[-1.4,1.4],"curves":[{"f":"cos(x)","label":"y=cos x"},{"f":"sin(x)","label":"y=sin x"}],"val":2.8284271247}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Cruce:</b> $\sin x=\cos x\Rightarrow\tan x=1\Rightarrow x=\tfrac\pi4$ (el siguiente, $\tfrac{5\pi}4$, queda fuera).</li>
+          <li><b>Orden:</b> en $[0,\tfrac\pi4]$ gana $\cos x$; en $[\tfrac\pi4,\pi]$ gana $\sin x$.</li>
+          <li>
+            $$A=\int_0^{\pi/4}(\cos x-\sin x)\,dx+\int_{\pi/4}^{\pi}(\sin x-\cos x)\,dx$$
+            $$=\bigl[\sin x+\cos x\bigr]_0^{\pi/4}+\bigl[-\cos x-\sin x\bigr]_{\pi/4}^{\pi}=(\sqrt2-1)+(1+\sqrt2).$$</li>
+        </ol>
+        <p class="answer">$A=2\sqrt2\approx2.8284$ u²</p>
+        <p class="warn">Error típico: calcular $\int_0^\pi(\sin x-\cos x)dx=2$. Las partes donde $\cos x$ está arriba salen negativas y se restan en lugar de sumarse.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E4 -->
+  <article class="ex">
+    <h3>Ejemplo 4 <span class="tag">Función compuesta · sustitución</span></h3>
+    <p>Calcula el área entre $f(x)=x\,e^{x^2}$ y $g(x)=x$ en $[0,1]$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"x*exp(x^2)","g":"x","a":0,"b":1,"var":"x"},"xr":[-0.2,1.2],"yr":[-0.2,3.2],"curves":[{"f":"x*exp(x^2)","label":"y=x·e^{x²}"},{"f":"x","label":"y=x"}],"val":0.3591409142}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Orden:</b> para $x\ge0$, $e^{x^2}\ge1$, así $xe^{x^2}\ge x$. Los límites $0$ y $1$ vienen dados.</li>
+          <li><b>Integral:</b> $A=\displaystyle\int_0^1\bigl(xe^{x^2}-x\bigr)dx$.</li>
+          <li><b>Sustitución</b> $u=x^2$, $du=2x\,dx$, entonces $\int xe^{x^2}dx=\tfrac12\int e^u\,du=\tfrac12e^{x^2}$.<br>
+            <em>Verificación:</em> $\frac{d}{dx}\bigl[\tfrac12e^{x^2}\bigr]=\tfrac12e^{x^2}\cdot2x=xe^{x^2}$ ✓.</li>
+          <li>$$A=\Bigl[\tfrac12e^{x^2}-\tfrac{x^2}{2}\Bigr]_0^1=\Bigl(\tfrac e2-\tfrac12\Bigr)-\Bigl(\tfrac12\Bigr)=\tfrac e2-1 .$$</li>
+        </ol>
+        <p class="answer">$A=\dfrac e2-1\approx0.3591$ u²</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E5 -->
+  <article class="ex">
+    <h3>Ejemplo 5 <span class="tag">Racional · logaritmo</span></h3>
+    <p>Calcula el área de la región limitada por $y=\dfrac1x$, $y=x$ y la recta $x=2$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"x","g":"1/x","a":1,"b":2,"var":"x"},"xr":[0,2.6],"yr":[0,2.6],"curves":[{"f":"x","label":"y=x"},{"f":"1/x","label":"y=1/x"}],"val":0.8068528194}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Intersección:</b> $\frac1x=x\Rightarrow x^2=1\Rightarrow x=1$ (tomamos $x>0$). El límite derecho lo da $x=2$.</li>
+          <li><b>Orden en $[1,2]$:</b> en $x=1.5$, $x=1.5>0.67=\frac1x$, la recta está arriba.</li>
+          <li>$$A=\int_1^2\Bigl(x-\frac1x\Bigr)dx=\Bigl[\tfrac{x^2}{2}-\ln x\Bigr]_1^2=(2-\ln2)-\tfrac12 .$$</li>
+        </ol>
+        <p class="answer">$A=\dfrac32-\ln2\approx0.8069$ u²</p>
+        <p class="note">$x=0$ es una asíntota vertical de $1/x$; por eso la región solo se toma a la derecha de $x=1$.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E6 -->
+  <article class="ex">
+    <h3>Ejemplo 6 <span class="tag">Racional compuesta · $\ln u$</span></h3>
+    <p>Calcula el área entre $f(x)=\dfrac{2x}{x^2+1}$ y $g(x)=\dfrac x2$ para $x\ge0$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"2*x/(x^2+1)","g":"x/2","a":0,"b":"sqrt(3)","var":"x"},"xr":[-0.3,2.3],"yr":[-0.2,1.3],"curves":[{"f":"2*x/(x^2+1)","label":"y=2x/(x²+1)"},{"f":"x/2","label":"y=x/2"}],"val":0.6362943611}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Intersecciones:</b> $\dfrac{2x}{x^2+1}=\dfrac x2\Rightarrow x=0$ o $4=x^2+1\Rightarrow x=\sqrt3$.</li>
+          <li><b>Orden:</b> en $x=1$, $f=1>\tfrac12=g$.</li>
+          <li><b>Antiderivada racional:</b> si $u=x^2+1$ entonces $u'=2x$ y $\int\frac{u'}{u}dx=\ln u$. Se verifica: $\frac d{dx}\ln(x^2+1)=\frac{2x}{x^2+1}$ ✓.</li>
+          <li>$$A=\int_0^{\sqrt3}\Bigl(\frac{2x}{x^2+1}-\frac x2\Bigr)dx=\Bigl[\ln(x^2+1)-\tfrac{x^2}{4}\Bigr]_0^{\sqrt3}=\ln4-\tfrac34 .$$</li>
+        </ol>
+        <p class="answer">$A=2\ln2-\dfrac34\approx0.6363$ u²</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E7 -->
+  <article class="ex">
+    <h3>Ejemplo 7 <span class="tag">Racional · arcotangente</span></h3>
+    <p>Calcula el área entre $y=\dfrac1{x^2+1}$ y $y=\dfrac{x^2}{2}$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"1/(x^2+1)","g":"x^2/2","a":-1,"b":1,"var":"x"},"xr":[-2,2],"yr":[-0.3,1.3],"curves":[{"f":"1/(x^2+1)","label":"y=1/(x²+1)"},{"f":"x^2/2","label":"y=x²/2"}],"val":1.2374629935}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Intersecciones:</b> $\frac1{x^2+1}=\frac{x^2}{2}\Rightarrow x^2(x^2+1)=2\Rightarrow x^4+x^2-2=0\Rightarrow(x^2+2)(x^2-1)=0$, luego $x=\pm1$.</li>
+          <li><b>Orden:</b> en $x=0$, $1>0$: arriba la racional.</li>
+          <li><b>Simetría:</b> ambas son pares, así que $A=2\int_0^1(\cdots)\,dx$. Además $\frac d{dx}\arctan x=\frac1{1+x^2}$.</li>
+          <li>$$A=2\int_0^1\Bigl(\frac1{x^2+1}-\frac{x^2}{2}\Bigr)dx=2\Bigl[\arctan x-\tfrac{x^3}{6}\Bigr]_0^1=2\Bigl(\tfrac\pi4-\tfrac16\Bigr).$$</li>
+        </ol>
+        <p class="answer">$A=\dfrac\pi2-\dfrac13\approx1.2375$ u²</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E8 -->
+  <article class="ex">
+    <h3>Ejemplo 8 <span class="tag">Varios cruces · tres intersecciones</span></h3>
+    <p>Calcula el área encerrada entre $y=x^3$ y $y=x$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"x^3","g":"x","a":-1,"b":1,"var":"x"},"xr":[-1.5,1.5],"yr":[-1.5,1.5],"curves":[{"f":"x^3","label":"y=x³"},{"f":"x","label":"y=x"}],"val":0.5}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Intersecciones:</b> $x^3=x\Rightarrow x(x-1)(x+1)=0$, es decir $x=-1,\,0,\,1$. Hay <b>dos regiones</b>.</li>
+          <li><b>Orden:</b> en $[-1,0]$, $x^3\ge x$ (p. ej. $x=-0.5$: $-0.125\ge-0.5$); en $[0,1]$, $x\ge x^3$.</li>
+          <li>
+            $$A=\int_{-1}^{0}(x^3-x)\,dx+\int_{0}^{1}(x-x^3)\,dx=\tfrac14+\tfrac14 .$$</li>
+        </ol>
+        <p class="answer">$A=\dfrac12$ u²</p>
+        <p class="warn">Si calculas $\int_{-1}^{1}(x-x^3)dx$ obtienes $0$: las dos regiones se cancelan por ser funciones impares. El área real no es cero.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- E9 -->
+  <article class="ex">
+    <h3>Ejemplo 9 <span class="tag">Exponenciales compuestas</span></h3>
+    <p>Calcula el área entre $y=e^{x}$ y $y=e^{-x}$ para $0\le x\le1$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"exp(x)","g":"exp(-x)","a":0,"b":1,"var":"x"},"xr":[-0.3,1.4],"yr":[0,3],"curves":[{"f":"exp(x)","label":"y=e^x"},{"f":"exp(-x)","label":"y=e^(−x)"}],"val":1.0861612696}'></figure>
+      <div class="sol">
+        <ol>
+          <li><b>Intersección:</b> $e^x=e^{-x}\Rightarrow x=0$. Para $x>0$, $e^x>e^{-x}$.</li>
+          <li><b>Antiderivada de $e^{-x}$:</b> se verifica: $\frac d{dx}\bigl(-e^{-x}\bigr)=-e^{-x}\cdot(-1)=e^{-x}$ ✓.</li>
+          <li>$$A=\int_0^1\bigl(e^x-e^{-x}\bigr)dx=\bigl[e^x+e^{-x}\bigr]_0^1=\bigl(e+e^{-1}\bigr)-2 .$$</li>
+        </ol>
+        <p class="answer">$A=e+\dfrac1e-2\approx1.0862$ u²</p>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section id="laboratorio">
+  <h2><span class="num">5</span> Laboratorio: grafica y calcula tu propia área</h2>
+  <p>Escribe dos funciones y los límites. El programa encuentra los cruces, parte la región, sombrea cada tramo e integra numéricamente. Se acepta <code>x^2</code>, <code>2x</code>, <code>sin(x)</code>, <code>exp(x)</code>, <code>ln(x)</code>, <code>sqrt(x)</code>, <code>abs(x)</code>, <code>pi</code>, <code>e</code> (<code>log</code> es base 10).</p>
+  <div class="widget" id="lab">
+    <div class="lab-grid">
+      <label>Integrar respecto a
+        <select id="lab-mode"><option value="x">$x$ (curvas $y=f(x)$)</option><option value="y">$y$ (curvas $x=h(y)$)</option></select>
+      </label>
+      <label>Ejemplos
+        <select id="lab-preset"></select>
+      </label>
+      <label><span id="lab-fl">$f(x)=$</span><input id="lab-f" type="text" value="x+2" spellcheck="false" autocomplete="off"></label>
+      <label><span id="lab-gl">$g(x)=$</span><input id="lab-g" type="text" value="x^2" spellcheck="false" autocomplete="off"></label>
+      <label>Límite inferior $a$<input id="lab-a" type="text" value="-1" spellcheck="false" autocomplete="off"></label>
+      <label>Límite superior $b$<input id="lab-b" type="text" value="2" spellcheck="false" autocomplete="off"></label>
+    </div>
+    <div class="controls">
+      <button id="lab-auto" type="button">Buscar límites en las intersecciones</button>
+      <button id="lab-go" type="button" class="primary">Calcular</button>
+    </div>
+    <p id="lab-error" class="error" role="alert" hidden></p>
+    <div id="lab-plot" class="plotbox"></div>
+    <div id="lab-legend" class="legend"></div>
+    <div id="lab-out" class="readout"></div>
+  </div>
+</section>
+
+<!-- ===================== EJERCICIOS ===================== -->
+<section id="ejercicios">
+  <h2><span class="num">6</span> Ejercicios para practicar</h2>
+  <p class="muted">Intenta cada uno antes de abrir la solución. Puedes comprobar tu respuesta en el laboratorio.</p>
+
+    <div class="exlist">
+    <details><summary><b>1.</b> Halla el área entre $y=x^2$ y $y=2x$.</summary>
+      <div class="detail">Cruces: $x^2=2x\Rightarrow x=0,\,2$. Arriba $2x$. $A=\int_0^2(2x-x^2)dx=\bigl[x^2-\tfrac{x^3}{3}\bigr]_0^2=4-\tfrac83=\tfrac43$.</div></details>
+    <details><summary><b>2.</b> Halla el área entre $y=\sqrt x$ y $y=x$.</summary>
+      <div class="detail">Cruces: $x=0,\,1$. Arriba $\sqrt x$. $A=\int_0^1(\sqrt x-x)dx=\tfrac23-\tfrac12=\tfrac16$.</div></details>
+    <details><summary><b>3.</b> (Compuesta) Área entre $y=e^{2x}$ y $y=e^{x}$ para $0\le x\le1$.</summary>
+      <div class="detail">Para $x\ge0$, $e^{2x}\ge e^x$. Se verifica: $\frac d{dx}\tfrac12e^{2x}=e^{2x}$. $A=\bigl[\tfrac12e^{2x}-e^x\bigr]_0^1=\bigl(\tfrac{e^2}2-e\bigr)-\bigl(\tfrac12-1\bigr)=\tfrac{e^2}{2}-e+\tfrac12\approx1.4762$.</div></details>
+    <details><summary><b>4.</b> (Racional) Área entre $y=\frac1x$ y $y=\frac1{x^2}$ para $1\le x\le2$.</summary>
+      <div class="detail">Para $x\ge1$, $\frac1x\ge\frac1{x^2}$. $A=\int_1^2\bigl(\tfrac1x-x^{-2}\bigr)dx=\bigl[\ln x+\tfrac1x\bigr]_1^2=\bigl(\ln2+\tfrac12\bigr)-1=\ln2-\tfrac12\approx0.1931$.</div></details>
+    <details><summary><b>5.</b> (Compuesta) Área entre $y=x\sqrt{x^2+1}$ y $y=x$ para $0\le x\le\sqrt3$.</summary>
+      <div class="detail">Como $\sqrt{x^2+1}\ge1$, arriba va $x\sqrt{x^2+1}$. Sustitución $u=x^2+1$, $du=2x\,dx$: $\int x\sqrt{x^2+1}\,dx=\tfrac13(x^2+1)^{3/2}$ (verifica derivando: $\tfrac13\cdot\tfrac32(x^2+1)^{1/2}\cdot2x$ ✓). $A=\bigl[\tfrac13(x^2+1)^{3/2}-\tfrac{x^2}{2}\bigr]_0^{\sqrt3}=\bigl(\tfrac83-\tfrac32\bigr)-\bigl(\tfrac13\bigr)=\tfrac56$.<br>Cálculo: $\tfrac13\cdot4^{3/2}=\tfrac83$ y $\tfrac13\cdot1=\tfrac13$.</div></details>
+    <details><summary><b>6.</b> (Respecto a $y$) Área entre $x=4-y^2$ y $x=y^2-4$.</summary>
+      <div class="detail">Cruces: $4-y^2=y^2-4\Rightarrow y=\pm2$. A la derecha $4-y^2$. $A=\int_{-2}^{2}(8-2y^2)dy=\bigl[8y-\tfrac{2y^3}{3}\bigr]_{-2}^{2}=\tfrac{64}{3}$.</div></details>
+    <details><summary><b>7.</b> (Varios cruces) Área entre $y=x^3-x$ y $y=3x$.</summary>
+      <div class="detail">Cruces: $x^3-x=3x\Rightarrow x(x^2-4)=0\Rightarrow x=-2,\,0,\,2$. En $[0,2]$ arriba $3x$; en $[-2,0]$ arriba $x^3-x$. Por simetría (funciones impares) $A=2\int_0^2(4x-x^3)dx=2\bigl[2x^2-\tfrac{x^4}{4}\bigr]_0^2=2\cdot4=8$.</div></details>
+  </div>
+
+</section>
+
+<section id="errores">
+  <h2><span class="num">7</span> Errores comunes y resumen</h2>
+  <div class="cases">
+    <div class="card err"><h4>Restar al revés</h4><p>Integrar $\text{inferior}-\text{superior}$ da un área negativa. Verifica con un punto de prueba.</p></div>
+    <div class="card err"><h4>Ignorar los cruces</h4><p>Un único $\int(f-g)$ entre dos puntos donde las curvas se cruzan cancela áreas (Ejemplos 3 y 8).</p></div>
+    <div class="card err"><h4>Integrar mal una función compuesta</h4><p>$\int e^{2x}dx\ne e^{2x}$: falta el factor $\tfrac12$. Deriva siempre tu respuesta para comprobarla.</p></div>
+    <div class="card err"><h4>Asíntotas en funciones racionales</h4><p>$\int_{-1}^{1}\frac1{x^2}dx$ no vale $-2$: hay una asíntota en $x=0$ y la integral diverge.</p></div>
+    <div class="card err"><h4>Mezclar variables</h4><p>Con $dy$, los límites son valores de $y$ y las curvas se escriben $x=h(y)$.</p></div>
+    <div class="card err"><h4>Unidades</h4><p>El resultado se expresa en unidades cuadradas (u²).</p></div>
+  </div>
+
+  <div class="card wide summary">
+    <h4>Resumen en una línea</h4>
+    $$A=\int_a^b\bigl|f(x)-g(x)\bigr|\,dx\qquad\text{o}\qquad A=\int_c^d\bigl|x_1(y)-x_2(y)\bigr|\,dy$$
+    <p>Grafica, halla los cruces, ordena las curvas, integra y verifica derivando tu antiderivada.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p>Proyecto de Cálculo II · Área entre curvas. Las gráficas y las integrales numéricas (regla de Simpson) se calculan en tu navegador; las fórmulas se muestran con <a href="https://katex.org" rel="noopener">KaTeX</a>.</p>
+</footer>
+</body>
+</html>
