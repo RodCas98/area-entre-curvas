@@ -384,26 +384,32 @@
   <h2><span class="num">5</span> Laboratorio: grafica y calcula tu propia área</h2>
   <p>Escribe dos funciones y los límites. El programa encuentra los cruces, parte la región, sombrea cada tramo e integra numéricamente. Se acepta <code>x^2</code>, <code>2x</code>, <code>sin(x)</code>, <code>exp(x)</code>, <code>ln(x)</code>, <code>sqrt(x)</code>, <code>abs(x)</code>, <code>pi</code>, <code>e</code> (<code>log</code> es base 10).</p>
   <div class="widget" id="lab">
-    <div class="lab-grid">
-      <label>Integrar respecto a
-        <select id="lab-mode"><option value="x">$x$ (curvas $y=f(x)$)</option><option value="y">$y$ (curvas $x=h(y)$)</option></select>
-      </label>
-      <label>Ejemplos
-        <select id="lab-preset"></select>
-      </label>
-      <label><span id="lab-fl">$f(x)=$</span><input id="lab-f" type="text" value="x+2" spellcheck="false" autocomplete="off"></label>
-      <label><span id="lab-gl">$g(x)=$</span><input id="lab-g" type="text" value="x^2" spellcheck="false" autocomplete="off"></label>
-      <label>Límite inferior $a$<input id="lab-a" type="text" value="-1" spellcheck="false" autocomplete="off"></label>
-      <label>Límite superior $b$<input id="lab-b" type="text" value="2" spellcheck="false" autocomplete="off"></label>
+    <div class="lab-layout">
+      <div class="lab-controls">
+        <label>Ejemplo precargado
+          <select id="lab-preset"></select>
+        </label>
+        <label>Integrar respecto a
+          <select id="lab-mode"><option value="x">x — curvas y = f(x)</option><option value="y">y — curvas x = h(y)</option></select>
+        </label>
+        <label><span id="lab-fl">$f(x)=$</span><input id="lab-f" type="text" value="" spellcheck="false" autocomplete="off"></label>
+        <label><span id="lab-gl">$g(x)=$</span><input id="lab-g" type="text" value="" spellcheck="false" autocomplete="off"></label>
+        <div class="pair">
+          <label>Límite inferior (a)<input id="lab-a" type="text" value="" spellcheck="false" autocomplete="off"></label>
+          <label>Límite superior (b)<input id="lab-b" type="text" value="" spellcheck="false" autocomplete="off"></label>
+        </div>
+        <div class="btns">
+          <button id="lab-go" type="button" class="primary">Calcular área</button>
+          <button id="lab-auto" type="button">Límites en las intersecciones</button>
+        </div>
+        <p id="lab-error" class="error" role="alert" hidden></p>
+      </div>
+      <div class="lab-view">
+        <div id="lab-plot" class="plotbox"></div>
+        <div id="lab-legend" class="legend"></div>
+        <div id="lab-out" class="readout"></div>
+      </div>
     </div>
-    <div class="controls">
-      <button id="lab-auto" type="button">Buscar límites en las intersecciones</button>
-      <button id="lab-go" type="button" class="primary">Calcular</button>
-    </div>
-    <p id="lab-error" class="error" role="alert" hidden></p>
-    <div id="lab-plot" class="plotbox"></div>
-    <div id="lab-legend" class="legend"></div>
-    <div id="lab-out" class="readout"></div>
   </div>
 </section>
 

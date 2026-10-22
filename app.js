@@ -62,7 +62,7 @@
         if (isFinite(U) && isFinite(L)) { up.push(pt(r.v, t, U)); lo.push(pt(r.v, t, L)); }
       }
       if (up.length < 2) return;
-      el('path', { class: 'region', d: poly(up.concat(lo.reverse())), fill: r.color || COLORS[i % COLORS.length], 'fill-opacity': '.28' }, g);
+      el('path', { class: 'region', d: poly(up.concat(lo.reverse())), fill: r.color || COLORS[i % COLORS.length], 'fill-opacity': '.38' }, g);
     });
 
     (o.rects || []).forEach(r => {
@@ -322,7 +322,8 @@
     $('lab-go').addEventListener('click', calc);
     $('lab-auto').addEventListener('click', autoLimits);
     [fI, gI, aI, bI].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') calc(); }));
-    calc();
+    preset.value = '0';
+    preset.dispatchEvent(new Event('change'));
   }
 
   function start() {
