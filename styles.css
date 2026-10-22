@@ -262,3 +262,11 @@ footer { max-width: 1000px; margin: 0 auto; padding: 1.5rem 16px 3rem; color: va
   .hero { padding: 1.8rem 1.2rem; border-radius: 18px; }
   .brand { font-size: .95rem; }
 }
+
+/* ---------- estudiante ---------- */
+.author { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 1.4rem; align-items: center; border-top-color: var(--accent-3); }
+.author img { width: 100%; height: auto; border-radius: 16px; display: block; box-shadow: 0 8px 22px rgba(23, 32, 58, .22); }
+.author dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: .45rem 1.1rem; }
+.author dt { color: var(--muted); font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; align-self: center; }
+.author dd { margin: 0; font-weight: 700; font-size: 1.1rem; }
+@media (max-width: 640px) { .author { grid-template-columns: minmax(0, 1fr); } .author img { max-width: 260px; margin: 0 auto; } }

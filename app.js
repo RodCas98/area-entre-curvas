@@ -193,9 +193,9 @@
 
   /* ---------- laboratorio ---------- */
   const PRESETS = [
-    { name: 'Cuaderno A: 2x²+x−3 y 2x−2', mode: 'x', f: '2*x-2', g: '2*x^2+x-3', a: '-0.5', b: '1' },
-    { name: 'Cuaderno B: x³ y x²+x', mode: 'x', f: 'x^3', g: 'x^2+x', a: '-0.618034', b: '1.618034' },
-    { name: 'Cuaderno C: x² y −x²+18x', mode: 'x', f: '-x^2+18*x', g: 'x^2', a: '0', b: '9' },
+    { name: 'Ejemplo A: 2x²+x−3 y 2x−2', mode: 'x', f: '2*x-2', g: '2*x^2+x-3', a: '-0.5', b: '1' },
+    { name: 'Ejemplo B: x³ y x²+x', mode: 'x', f: 'x^3', g: 'x^2+x', a: '-0.618034', b: '1.618034' },
+    { name: 'Ejemplo C: x² y −x²+18x', mode: 'x', f: '-x^2+18*x', g: 'x^2', a: '0', b: '9' },
     { name: 'x+2 y x²', mode: 'x', f: 'x+2', g: 'x^2', a: '-1', b: '2' },
     { name: 'sen x y cos x en [0, π]', mode: 'x', f: 'cos(x)', g: 'sin(x)', a: '0', b: 'pi' },
     { name: 'x·e^(x²) y x en [0, 1]', mode: 'x', f: 'x*exp(x^2)', g: 'x', a: '0', b: '1' },
