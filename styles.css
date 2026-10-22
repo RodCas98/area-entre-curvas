@@ -270,3 +270,15 @@ footer { max-width: 1000px; margin: 0 auto; padding: 1.5rem 16px 3rem; color: va
 .author dt { color: var(--muted); font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; align-self: center; }
 .author dd { margin: 0; font-weight: 700; font-size: 1.1rem; }
 @media (max-width: 640px) { .author { grid-template-columns: minmax(0, 1fr); } .author img { max-width: 260px; margin: 0 auto; } }
+
+/* ---------- videos ---------- */
+.videos { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.2rem; margin: 1rem 0; }
+.vcard { background: var(--surface); border: 1px solid var(--border); border-top: 5px solid var(--accent-3); border-radius: 16px; padding: 1rem; box-shadow: var(--shadow); min-width: 0; }
+.vcard:nth-child(2) { border-top-color: var(--accent-2); }
+.vcard h3 { margin: 0 0 .2rem; font-size: 1.1rem; }
+.vcard video { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; background: #0f1226; display: block; margin: .6rem 0; }
+.vcard details { margin-top: .4rem; }
+.vcard summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+.vscript { margin: .6rem 0 0; padding: 0; list-style: none; max-height: 22rem; overflow: auto; }
+.vscript li { padding: .5rem .7rem; border-radius: 10px; background: var(--surface-2); margin: .4rem 0; font-size: .95rem; }
+.vscript time { display: block; font-size: .78rem; font-weight: 800; color: var(--accent-3); letter-spacing: .04em; }
