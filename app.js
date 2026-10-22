@@ -137,6 +137,18 @@
     });
     host.appendChild(legend);
 
+    if (cfg.table) {
+      const fs = cfg.table.fns.map(s => M.compile(s, 'x'));
+      const tw = document.createElement('div');
+      tw.className = 'tablewrap vals';
+      let html = '<table><thead><tr><th>x</th>' + cfg.table.heads.map(h => '<th>' + h + '</th>').join('') + '</tr></thead><tbody>';
+      cfg.table.xs.forEach(x => {
+        html += '<tr><td>' + x + '</td>' + fs.map(f => '<td>' + parseFloat(f(x).toFixed(3)) + '</td>').join('') + '</tr>';
+      });
+      tw.innerHTML = html + '</tbody></table>';
+      host.appendChild(tw);
+    }
+
     const area = regs.reduce((s, r) => s + M.regionArea(r), 0);
     const cap = document.createElement('figcaption');
     cap.className = 'verify';
@@ -181,6 +193,9 @@
 
   /* ---------- laboratorio ---------- */
   const PRESETS = [
+    { name: 'Cuaderno A: 2x²+x−3 y 2x−2', mode: 'x', f: '2*x-2', g: '2*x^2+x-3', a: '-0.5', b: '1' },
+    { name: 'Cuaderno B: x³ y x²+x', mode: 'x', f: 'x^3', g: 'x^2+x', a: '-0.618034', b: '1.618034' },
+    { name: 'Cuaderno C: x² y −x²+18x', mode: 'x', f: '-x^2+18*x', g: 'x^2', a: '0', b: '9' },
     { name: 'x+2 y x²', mode: 'x', f: 'x+2', g: 'x^2', a: '-1', b: '2' },
     { name: 'sen x y cos x en [0, π]', mode: 'x', f: 'cos(x)', g: 'sin(x)', a: '0', b: 'pi' },
     { name: 'x·e^(x²) y x en [0, 1]', mode: 'x', f: 'x*exp(x^2)', g: 'x', a: '0', b: '1' },

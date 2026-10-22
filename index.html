@@ -32,7 +32,7 @@
   <h1>Área entre curvas</h1>
   <p class="lead">De las sumas de Riemann a la integral definida: cómo calcular el área de una región encerrada por dos o más gráficas, integrando respecto a $x$ o a $y$, con curvas que se cruzan y con funciones polinómicas, compuestas, racionales y trigonométricas.</p>
   <ul class="chips">
-    <li>Teoría completa</li><li>9 ejemplos resueltos</li><li>Funciones compuestas y racionales</li><li>Graficador interactivo</li><li>7 ejercicios con solución</li>
+    <li>Teoría completa</li><li>12 ejemplos resueltos</li><li>Funciones compuestas y racionales</li><li>Graficador interactivo</li><li>7 ejercicios con solución</li>
   </ul>
 </section>
 
@@ -56,6 +56,8 @@
     <div id="riemann-plot" class="plotbox"></div>
     <p class="readout" id="riemann-read"></p>
   </div>
+
+  <p class="note"><b>En palabras:</b> el área entre dos funciones es la integral de la diferencia entre la función superior y la función inferior, en el intervalo definido por los valores de intersección entre las curvas.</p>
 
   <h3>Las fórmulas fundamentales</h3>
   <div class="formulas">
@@ -87,7 +89,7 @@
 <section id="procedimiento">
   <h2><span class="num">2</span> Método paso a paso</h2>
   <ol class="steps big">
-    <li><b>Grafica</b> las curvas (aunque sea un bosquejo) y sombrea la región pedida.</li>
+    <li><b>Grafica</b> las curvas con una tabla de valores y sombrea la región pedida.</li>
     <li><b>Halla las intersecciones</b> resolviendo $f(x)=g(x)$ (o $x_1(y)=x_2(y)$). Estos puntos suelen ser los límites de integración. Revisa si se cruzan más veces dentro del intervalo.</li>
     <li><b>Elige la variable</b> de integración (ver tabla). Con $x$, las franjas son verticales; con $y$, horizontales.</li>
     <li><b>Identifica qué curva está arriba</b> (o a la derecha) en cada tramo: evalúa ambas funciones en un punto de prueba dentro del tramo.</li>
@@ -138,6 +140,70 @@
 <section id="ejemplos">
   <h2><span class="num">4</span> Ejemplos resueltos</h2>
   <p class="muted">Cada gráfica se dibuja y se integra numéricamente en tu navegador; el valor numérico que ves debe coincidir con el resultado exacto del desarrollo.</p>
+
+  <h3 class="subsec">Ejemplos del cuaderno de clase (tres pasos)</h3>
+  <p>Estos tres problemas siguen el procedimiento del cuaderno: <b>Paso 1</b> graficar con una tabla de valores, <b>Paso 2</b> hallar las intersecciones, <b>Paso 3</b> operar la integral.</p>
+
+  <!-- A -->
+  <article class="ex">
+    <h3>Ejemplo A <span class="tag">Polinómicas · una región</span></h3>
+    <p>Determina el área entre $f(x)=2x^2+x-3$ y $g(x)=2x-2$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"2*x-2","g":"2*x^2+x-3","a":-0.5,"b":1,"var":"x"},"xr":[-3,3],"yr":[-5,12],"curves":[{"f":"2*x^2+x-3","label":"f(x)=2x²+x−3"},{"f":"2*x-2","label":"g(x)=2x−2"}],"table":{"xs":[-3,-2,-1,0,1,2,3],"fns":["2*x^2+x-3","2*x-2"],"heads":["f(x)","g(x)"]},"val":1.125}'></figure>
+      <div class="sol">
+        <p><b>Paso 1 · Graficar.</b> Con la tabla de valores se traza cada curva; la región queda entre ellas.</p>
+        <p><b>Paso 2 · Intersección.</b> Igualamos:</p>
+        $$2x^2+x-3=2x-2\ \Rightarrow\ 2x^2-x-1=0\ \Rightarrow\ (2x+1)(x-1)=0$$
+        <p>$x=-\tfrac12=-0.5$ y $x=1$. En $x=0$: $g=-2>-3=f$, así que $g$ es la función superior.</p>
+        <p><b>Paso 3 · Operamos.</b></p>
+        $$A=\int_{-0.5}^{1}\bigl[(2x-2)-(2x^2+x-3)\bigr]dx=\int_{-0.5}^{1}\bigl(-2x^2+x+1\bigr)dx$$
+        $$=\Bigl[-\tfrac{2x^3}{3}+\tfrac{x^2}{2}+x\Bigr]_{-0.5}^{1}=\tfrac56-\Bigl(-\tfrac7{24}\Bigr)=\tfrac98 .$$
+        <p class="answer">$A=\dfrac98=1.125$ u²</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- B -->
+  <article class="ex">
+    <h3>Ejemplo B <span class="tag">Polinómicas · dos regiones</span></h3>
+    <p>Determina el área entre $f(x)=x^3$ y $g(x)=x^2+x$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"x^3","g":"x^2+x","a":"(1-sqrt(5))/2","b":"(1+sqrt(5))/2","var":"x"},"xr":[-1.5,2],"yr":[-3.5,6],"curves":[{"f":"x^3","label":"f(x)=x³"},{"f":"x^2+x","label":"g(x)=x²+x"}],"table":{"xs":[-2,-1,0,1,2],"fns":["x^3","x^2+x"],"heads":["f(x)","g(x)"]},"val":1.0833333333}'></figure>
+      <div class="sol">
+        <p><b>Paso 1 · Graficar</b> con la tabla de valores.</p>
+        <p><b>Paso 2 · Intersección.</b></p>
+        $$x^3=x^2+x\ \Rightarrow\ x^3-x^2-x=0\ \Rightarrow\ x\,(x^2-x-1)=0$$
+        <p>$x=0$ y $x=\dfrac{1\pm\sqrt5}{2}\approx 1.618,\ -0.618$. Son tres cruces, por lo tanto <b>dos regiones</b>.</p>
+        <p><b>Quién está arriba:</b> en $[-0.618,\,0]$ gana $f$ (en $x=-0.5$: $-0.125>-0.25$); en $[0,\,1.618]$ gana $g$ (en $x=1$: $2>1$).</p>
+        <p><b>Paso 3 · Operamos.</b></p>
+        $$A_1=\int_{-0.618}^{0}\bigl[x^3-(x^2+x)\bigr]dx\approx0.076\ \text{u}^2$$
+        $$A_2=\int_{0}^{1.618}\bigl[(x^2+x)-x^3\bigr]dx\approx1.008\ \text{u}^2$$
+        <p>Con $F(x)=\tfrac{x^4}{4}-\tfrac{x^3}{3}-\tfrac{x^2}{2}$ y usando $x^2=x+1$ en las raíces, $F=-\frac{5x+4}{12}$, y la suma exacta es $\dfrac{5\cdot1+8}{12}$.</p>
+        <p class="answer">$A=A_1+A_2=\dfrac{13}{12}\approx1.0833$ u²</p>
+        <p class="warn">No basta una sola integral de $-0.618$ a $1.618$: la parte donde $f$ está arriba y la parte donde $g$ está arriba tienen signos opuestos.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- C -->
+  <article class="ex">
+    <h3>Ejemplo C <span class="tag">Polinómicas · dos parábolas</span></h3>
+    <p>Determina el área entre $f(x)=x^2$ y $g(x)=-x^2+18x$.</p>
+    <div class="ex-grid">
+      <figure class="fig" data-cfg='{"auto":{"f":"-x^2+18*x","g":"x^2","a":0,"b":9,"var":"x"},"xr":[-2,11],"yr":[-30,110],"curves":[{"f":"x^2","label":"f(x)=x²"},{"f":"-x^2+18*x","label":"g(x)=−x²+18x"}],"table":{"xs":[-1,0,3,5,7,9,10],"fns":["x^2","-x^2+18*x"],"heads":["f(x)","g(x)"]},"val":243}'></figure>
+      <div class="sol">
+        <p><b>Paso 1 · Graficar</b> con la tabla de valores.</p>
+        <p><b>Paso 2 · Intersección.</b></p>
+        $$x^2=-x^2+18x\ \Rightarrow\ 2x^2-18x=0\ \Rightarrow\ 2x\,(x-9)=0$$
+        <p>$x=0$ y $x=9$. En $x=5$: $g=65>25=f$, luego $g$ es la superior.</p>
+        <p><b>Paso 3 · Operamos.</b></p>
+        $$A=\int_0^9\bigl[(-x^2+18x)-x^2\bigr]dx=\int_0^9\bigl(-2x^2+18x\bigr)dx=\Bigl[-\tfrac{2x^3}{3}+9x^2\Bigr]_0^9=-486+729 .$$
+        <p class="answer">$A=243$ u²</p>
+      </div>
+    </div>
+  </article>
+
+  <h3 class="subsec">Más ejemplos: otros tipos de funciones</h3>
 
   <!-- E1 -->
   <article class="ex">
